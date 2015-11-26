@@ -1,8 +1,8 @@
 const int Sensor1TrigPin=7;
 const int Sensor1EchoPin=6;
 
-const int SmoothingValue=20;
-int lastResults[SmoothingValue];
+const int SmoothingValue=20; //da 1 a 50, media
+int lastResults[50];
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(2400);
