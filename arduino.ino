@@ -10,6 +10,8 @@ void setup() {
   Serial.begin(2400);
   pinMode(Sensor1TrigPin,OUTPUT);
   pinMode(Sensor1EchoPin,INPUT);
+  pinMode(Sensor2TrigPin,OUTPUT);
+  pinMode(Sensor2EchoPin,INPUT);
 }
  
 long measure(int TrigPin,int EchoPin){
