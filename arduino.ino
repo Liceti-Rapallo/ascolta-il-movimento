@@ -3,12 +3,14 @@ const int Sensor1EchoPin=6;
 const int Sensor2TrigPin=3;
 const int Sensor2EchoPin=2;
 
+const int TargetOutputHz=5; //obiettivo in HZ
+
 double MeasureMsecs;
 double MillisStore[2];
 double timeDelta;
 
-const int SmoothingValue=20; //da 1 a 50, media
-int lastResults[50];
+int SmoothingValue; //da 1 a 30, media
+int lastResults[30];
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
@@ -21,6 +23,8 @@ void setup() {
   MillisStore[0]=0;
   MillisStore[1]=millis();
   timeDelta=0;
+
+  setSmoothingSampleSize(5);
 }
  
 long measure(int TrigPin,int EchoPin){
@@ -60,8 +64,13 @@ long measure(int TrigPin,int EchoPin){
   }
 }
 
+void setSmoothingSampleSize(int x){if(x<31&&x>0){SmoothingValue=x;}else{SmoothingValue=10;}}
 double getDelta(int x,int y){return MillisStore[x]-MillisStore[y];}
 void printDelta(int x,int y){Serial.print(" "); Serial.print(getDelta(x,y));}
+void optimizeSampling(){
+  int desideredMsec=(1000/TargetOutputHz)/2;
+  //DA FINIRE
+}
 
 void loop() {
   // put your main code here, to run repeatedly:
