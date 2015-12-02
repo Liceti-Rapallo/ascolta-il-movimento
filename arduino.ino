@@ -3,15 +3,24 @@ const int Sensor1EchoPin=6;
 const int Sensor2TrigPin=3;
 const int Sensor2EchoPin=2;
 
+double MeasureMsecs;
+double MillisStore[2];
+double timeDelta;
+
 const int SmoothingValue=20; //da 1 a 50, media
 int lastResults[50];
 void setup() {
   // put your setup code here, to run once:
-  Serial.begin(2400);
+  Serial.begin(115200);
   pinMode(Sensor1TrigPin,OUTPUT);
   pinMode(Sensor1EchoPin,INPUT);
   pinMode(Sensor2TrigPin,OUTPUT);
   pinMode(Sensor2EchoPin,INPUT);
+  
+  MeasureMsecs=0;
+  MillisStore[0]=0;
+  MillisStore[1]=millis();
+  timeDelta=0;
 }
  
 long measure(int TrigPin,int EchoPin){
@@ -24,6 +33,9 @@ long measure(int TrigPin,int EchoPin){
     delayMicroseconds(10);
     digitalWrite(TrigPin, LOW);
     int duration = pulseIn(EchoPin,HIGH,18000);
+    
+    MeasureMsecs=millis();
+    
     if (!(duration==0)){
       lastResults[i]=duration/58;
     }else
@@ -47,11 +59,21 @@ long measure(int TrigPin,int EchoPin){
     return cm;
   }
 }
-int incomingByte=0;
+
+double getDelta(int x,int y){return MillisStore[x]-MillisStore[y];}
+void printDelta(int x,int y){Serial.print(" "); Serial.print(getDelta(x,y));}
+
 void loop() {
   // put your main code here, to run repeatedly:
   Serial.print(measure(Sensor1TrigPin,Sensor1EchoPin));
-  Serial.print(" | ");
-  Serial.println(measure(Sensor2TrigPin,Sensor2EchoPin));
-  delay(500);
+  MillisStore[0]=MeasureMsecs;
+  printDelta(0,1);
+  Serial.print(" ");
+  Serial.print(measure(Sensor2TrigPin,Sensor2EchoPin));
+  MillisStore[1]=MeasureMsecs;
+  printDelta(1,0);
+  Serial.print(" ");
+  timeDelta=MillisStore[1]-MillisStore[0];
+  Serial.println();
+  //delay(20);
 }
