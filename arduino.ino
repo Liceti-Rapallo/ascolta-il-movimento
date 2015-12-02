@@ -64,12 +64,27 @@ long measure(int TrigPin,int EchoPin){
   }
 }
 
-void setSmoothingSampleSize(int x){if(x<31&&x>0){SmoothingValue=x;}else{SmoothingValue=10;}}
+void setSmoothingSampleSize(int x){
+  if (x>30){
+    SmoothingValue=30;
+  }else if (x<1){
+    SmoothingValue=1;
+  }else{
+    SmoothingValue=x;
+  }
+  }
 double getDelta(int x,int y){return MillisStore[x]-MillisStore[y];}
-void printDelta(int x,int y){Serial.print(" "); Serial.print(getDelta(x,y));}
-void optimizeSampling(){
+void printDelta(int x,int y){Serial.print(" "); Serial.print(getDelta(x,y)); optimizeSampling(x,y);}
+void optimizeSampling(int x,int y){
   int desideredMsec=(1000/TargetOutputHz)/2;
   //DA FINIRE
+  if (getDelta(x,y)<desideredMsec){
+    setSmoothingSampleSize(++SmoothingValue);
+  }
+  else
+  {
+    setSmoothingSampleSize(--SmoothingValue);
+  }
 }
 
 void loop() {
