@@ -1,5 +1,7 @@
 const int Sensor1TrigPin=7;
 const int Sensor1EchoPin=6;
+const int Sensor2TrigPin=3;
+const int Sensor2EchoPin=2;
 
 const int SmoothingValue=20; //da 1 a 50, media
 int lastResults[50];
@@ -46,8 +48,8 @@ long measure(int TrigPin,int EchoPin){
 int incomingByte=0;
 void loop() {
   // put your main code here, to run repeatedly:
-  Serial.println(measure(Sensor1TrigPin,Sensor1EchoPin));
-  //Serial.print(" | ");
-  //Serial.println(measure(Sensor1TrigPin,Sensor1EchoPin));
+  Serial.print(measure(Sensor1TrigPin,Sensor1EchoPin));
+  Serial.print(" | ");
+  Serial.println(measure(Sensor2TrigPin,Sensor2EchoPin));
   delay(500);
 }
